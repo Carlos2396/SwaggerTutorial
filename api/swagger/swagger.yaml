@@ -23,6 +23,19 @@ paths:
     get:
       description: get the game system list
       operationId: getGameSystems
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: false
+        - name: sort
+          in: query
+          type: string
+          required: false
+        - name: fields
+          in: query
+          type: string
+          required: false
       responses:
         "200":
           description: Success
@@ -54,10 +67,30 @@ paths:
     get:
       description: get a game system
       parameters:
-        - name: id
+        - name: name
+          in: query
+          type: string
+          required: false
+        - name: developer
+          in: query
+          type: string
+          required: false
+        - name: gamesystem
+          in: query
+          type: string
+          required: false
+        - name: genre
+          in: query
+          type: string
+          required: false
+        - name: year
+          in: query
           type: number
-          in: path
-          required: true
+          required: false
+        - name: sort
+          in: query
+          type: string
+          required: false
       responses:
         "200":
           description: Success
@@ -212,6 +245,9 @@ definitions:
       description:
         type: string
         description: Description of the Game System
+      image:
+        type: string
+        format: byte
     required:
       - name
       - description
@@ -302,5 +338,9 @@ definitions:
     required:
       - message
     properties:
+      code:
+        type: number
       message:
+        type: string
+      description:
         type: string
