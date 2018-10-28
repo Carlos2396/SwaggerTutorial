@@ -1,23 +1,65 @@
-'use strict';
+// app.js
 
-var SwaggerExpress = require('swagger-express-mw');
-var app = require('express')();
-module.exports = app; // for testing
+const log = require('./api/helpers/log.helper');
 
-var config = {
-  appRoot: __dirname // required config
-};
+const swaggerExpressBootstrap = require('./api/bootstrap/swaggerExpress.bootstrap');
+const configBootstrap = require('./api/bootstrap/config.bootstrap');
+const traceLevelBootstrap = require('./api/bootstrap/tracelevel.bootstrap');
 
-SwaggerExpress.create(config, function(err, swaggerExpress) {
-  if (err) { throw err; }
+// //////////////////////////////////////////////////////////////////////////////
+// CONSTANTS
+// //////////////////////////////////////////////////////////////////////////////
 
-  // install middleware
-  swaggerExpress.register(app);
+const MODULE_NAME = '[Main App]';
+const appRoot = __dirname;
 
-  var port = process.env.PORT || 10010;
-  app.listen(port);
+// //////////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+// //////////////////////////////////////////////////////////////////////////////
 
-  if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
+function logAppStarted(functionName) {
+  log.info(`${MODULE_NAME} ${functionName}`);
+  log.info(`${MODULE_NAME} ${functionName} -------------------------------------------------------------------------`);
+  log.info(`${MODULE_NAME} ${functionName} --                         App Initialized OK!                         --`);
+  log.info(`${MODULE_NAME} ${functionName} -------------------------------------------------------------------------`);
+}
+
+// //////////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+// //////////////////////////////////////////////////////////////////////////////
+
+async function init() {
+  try {
+    log.info(`${MODULE_NAME}:${init.name} (IN) --> starting}`);
+
+    // 1. Load Config
+    await configBootstrap.initAppConfig();
+
+    // 2. Set Trace Level
+    traceLevelBootstrap.setTraceLevel();
+
+    // 3. Start Swagger
+    await swaggerExpressBootstrap.start(appRoot, process.env.NODE_PORT);
+
+    // 4. Log App Started OK
+    logAppStarted(init.name);
+    // 5. Exit with true
+    return true;
+  } catch (error) {
+    log.error(`${MODULE_NAME}:${init.name} (ERROR) --> error: ${error.message}`);
+    // 6. Exit with false
+    return false;
   }
-});
+}
+
+function stop() {
+  swaggerExpressBootstrap.stop();
+}
+
+// The application starts here when this module is loaded!
+init();
+
+module.exports = {
+  init,
+  stop,
+};
