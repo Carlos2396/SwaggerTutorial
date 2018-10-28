@@ -1,22 +1,19 @@
-'use strict';
-
-var _ = require('lodash');
-var shortid = require('shortid');
+const _ = require('lodash');
+const shortid = require('shortid');
 
 ////////////////////////////////////////////////////////////////////////////////
 // PROPERTIES
 ////////////////////////////////////////////////////////////////////////////////
 
 // Defines an initial set of gamesystems 
-var gamesystems = [];
+let gamesystems = [];
 
 ////////////////////////////////////////////////////////////////////////////////
 // PUBLIC FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////
 
 function getGameSystems(params) {
-
-  var gamesystemsResult = gamesystems.slice();
+  let gamesystemsResult = gamesystems.slice();
 
   // Filter by name
   if (params.name !== undefined) {
@@ -36,24 +33,23 @@ function getGameSystems(params) {
 }
 
 function getGameSystemById(id) {
-  return gamesystems.find(element => {
+  return gamesystems.find((element) => {
     return element.id === id;
   });
 }
 
 function getGameSystemByName(name) {
-  return gamesystems.find(element => {
+  return gamesystems.find((element) => {
     return element.name === name;
   });
 }
 
 function createGameSystem(gameSystemP) {
-
-  var newGameSystem = {
+  const newGameSystem = {
     id: shortid.generate(),
     name: gameSystemP.name,
     description: gameSystemP.description,
-    image: gameSystemP.image
+    image: gameSystemP.image,
   };
 
   gamesystems.push(newGameSystem);
@@ -63,9 +59,9 @@ function createGameSystem(gameSystemP) {
 
 function updateGameSystem(gameSystemP) {
 
-  var idToSearch = gameSystemP.id;
+  const idToSearch = gameSystemP.id;
 
-  var gameSystemToUpdate = getGameSystemById(idToSearch);
+  const gameSystemToUpdate = getGameSystemById(idToSearch);
 
   if (gameSystemToUpdate !== undefined) {
     gameSystemToUpdate.name = gameSystemP.name;
@@ -77,19 +73,18 @@ function updateGameSystem(gameSystemP) {
 }
 
 function deleteGameSystem(id) {
+  const idToSearch = id;
 
-  var idToSearch = id;
-
-  var gameSystemToDelete = getGameSystemById(idToSearch);
+  const gameSystemToDelete = getGameSystemById(idToSearch);
 
   if (gameSystemToDelete !== undefined) {
-    _.remove(gamesystems, function (element) {
+    _.remove(gamesystems, (element) => {
       return element.id === gameSystemToDelete.id;
     });
     return true;
-  } else {
-    return false;
   }
+
+  return false;
 }
 
 function initDefaultGameSystems(gamesystemsSet) {
@@ -103,5 +98,5 @@ module.exports = {
   createGameSystem,
   updateGameSystem,
   deleteGameSystem,
-  initDefaultGameSystems
-}
+  initDefaultGameSystems,
+};

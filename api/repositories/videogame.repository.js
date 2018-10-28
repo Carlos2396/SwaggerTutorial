@@ -1,22 +1,19 @@
-'use strict';
-
-var _ = require('lodash');
-var shortid = require('shortid');
+const _ = require('lodash');
+const shortid = require('shortid');
 
 ////////////////////////////////////////////////////////////////////////////////
 // PROPERTIES
 ////////////////////////////////////////////////////////////////////////////////
 
 // Defines an initial set of gamesystems 
-var videogames = [];
+let videogames = [];
 
 ////////////////////////////////////////////////////////////////////////////////
 // PUBLIC FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////
 
 function getVideoGames(params) {
-
-  var videogamesResult = videogames.slice();
+  let videogamesResult = videogames.slice();
 
   // Filter by name
   if (params.name !== undefined) {
@@ -41,9 +38,8 @@ function getVideoGames(params) {
 
   // Order by field
   if (params.sort !== undefined) {
-
-    var direction;
-    var nameField;
+    let direction;
+    let nameField;
 
     if (_.startsWith(params.sort, '-')) {
       direction = 'desc';
@@ -54,7 +50,6 @@ function getVideoGames(params) {
     }
 
     videogamesResult = _.orderBy(videogamesResult, [nameField], [direction]);
-
   }
 
   // Returning only specific fields
@@ -66,27 +61,27 @@ function getVideoGames(params) {
 }
 
 function getVideoGameById(id) {
-  return videogames.find(element => {
+  return videogames.find((element) => {
     return element.id === id;
   });
 }
 
 function getVideoGameByName(name) {
-  return videogames.find(element => {
+  return videogames.find((element) => {
     return element.name === name;
   });
 }
 
 function createVideoGame(videogameP) {
 
-  var newVideoGame = {
+  const newVideoGame = {
     id: shortid.generate(),
     name: videogameP.name,
     developer: videogameP.developer,
     gamesystem: videogameP.gamesystem,
     genre: videogameP.genre,
     year: videogameP.year,
-    image: videogameP.image
+    image: videogameP.image,
   };
 
   videogames.push(newVideoGame);
@@ -95,9 +90,8 @@ function createVideoGame(videogameP) {
 }
 
 function updateVideoGame(params) {
-
-  var idToSearch = params.id;
-  var videogameToUpdate = getVideoGameById(idToSearch);
+  const idToSearch = params.id;
+  const videogameToUpdate = getVideoGameById(idToSearch);
 
   if (videogameToUpdate !== undefined) {
     videogameToUpdate.name = params.name;
@@ -111,26 +105,23 @@ function updateVideoGame(params) {
 }
 
 function deleteVideoGame(id) {
-
-  var idToSearch = id;
-
-  var videogameToDelete = getVideoGameById(idToSearch);
+  const idToSearch = id;
+  const videogameToDelete = getVideoGameById(idToSearch);
 
   if (videogameToDelete !== undefined) {
-    _.remove(videogames, function (element) {
+    _.remove(videogames, (element) => {
       return element.id === videogameToDelete.id;
     });
     return true;
-  } else {
-    return false;
   }
+
+  return false;
 }
 
-function stripVideoGames(fields, videogames) {
+function stripVideoGames(fields, videogamesList) {
+  const arrayFields = fields.split(',');
 
-  var arrayFields = fields.split(',');
-
-  var strippedVideoGameResults = _.map(videogames, function (videogame) {
+  const strippedVideoGameResults = _.map(videogamesList, (videogame) => {
     return _.pick(videogame, arrayFields);
   });
 
@@ -148,5 +139,5 @@ module.exports = {
   createVideoGame,
   updateVideoGame,
   deleteVideoGame,
-  initDefaultVideoGames
-}
+  initDefaultVideoGames,
+};

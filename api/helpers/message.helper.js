@@ -1,5 +1,3 @@
-'use strict';
-
 ////////////////////////////////////////////////////////////////////////////////
 // CONSTANTS
 ////////////////////////////////////////////////////////////////////////////////
@@ -13,7 +11,7 @@ const TITLE_MESSAGE = 'message';
 
 function buildGenericMessage(nameMessage, textMessage) {
 
-  var jsonMessageResult = {};
+  const jsonMessageResult = {};
   jsonMessageResult[nameMessage] = textMessage;
   return jsonMessageResult;
 }
@@ -23,20 +21,17 @@ function buildGenericMessage(nameMessage, textMessage) {
 ////////////////////////////////////////////////////////////////////////////////
 
 function buildErrorMessage(text) {
-
-  var jsonErrorMessage = buildGenericMessage(TITLE_ERROR, text)
+  const jsonErrorMessage = buildGenericMessage(TITLE_ERROR, text);
   return jsonErrorMessage;
 }
 
 function buildMessage(text) {
-
-  var jsonErrorMessage = buildGenericMessage(TITLE_MESSAGE, text)
+  const jsonErrorMessage = buildGenericMessage(TITLE_MESSAGE, text);
   return jsonErrorMessage;
 }
 
 module.exports = {
   buildErrorMessage,
   buildMessage,
-  //For testing
-  buildGenericMessage
-}
+  buildGenericMessage,
+};

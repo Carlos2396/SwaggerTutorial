@@ -1,9 +1,7 @@
-'use strict';
-
-var _ = require('lodash');
-var videogameRepository = require('../repositories/videogame.repository');
-var gamesystemRepository = require('../repositories/gamesystem.repository');
-var messageHelper = require('../helpers/message.helper');
+const _ = require('lodash');
+const videogameRepository = require('../repositories/videogame.repository');
+const gamesystemRepository = require('../repositories/gamesystem.repository');
+const messageHelper = require('../helpers/message.helper');
 
 ////////////////////////////////////////////////////////////////////////////////
 // CONSTANTS
@@ -33,25 +31,20 @@ function getGameSystemByName(name) {
 }
 
 function createGameSystem(params) {
-
-  // Checks if exists a gamesystem with the same name - Using module.exports to call the function to ease the testing
-  var gamesystemFound = module.exports.getGameSystemByName(params.name);
+  const gamesystemFound = module.exports.getGameSystemByName(params.name);
   if (_.isUndefined(gamesystemFound)) {
     return gamesystemRepository.createGameSystem(params);
-  } else {
-    return messageHelper.buildErrorMessage(GS_SVC_ERR_CREATE_GS_ALREADY_EXISTS_WITH_SAME_NAME);
   }
+
+  return messageHelper.buildErrorMessage(GS_SVC_ERR_CREATE_GS_ALREADY_EXISTS_WITH_SAME_NAME);
 }
 
 function updateGameSystem(params) {
-
-  var result;
-  // Checks if exists a gamesystem with the same id - Using module.exports to call the function to ease the testing
-  var gamesystemFoundById = module.exports.getGameSystemById(params.id);
+  let result;
+  const gamesystemFoundById = module.exports.getGameSystemById(params.id);
   if (!_.isUndefined(gamesystemFoundById)) {
 
-    // Then checks if exists a gamesystem with the same name. If exists, the id must be the same that the object in params
-    var gamesystemFoundByName = module.exports.getGameSystemByName(params.name);
+    const gamesystemFoundByName = module.exports.getGameSystemByName(params.name);
 
     if (_.isUndefined(gamesystemFoundByName) || gamesystemFoundByName.id === params.id) {
       result = gamesystemRepository.updateGameSystem(params);
@@ -67,19 +60,19 @@ function updateGameSystem(params) {
 
 function deleteGameSystem(id) {
 
-  var result;
+  let result;
 
   // First obtains the game system
-  var myGameSystem = module.exports.getGameSystemById(id);
+  const myGameSystem = module.exports.getGameSystemById(id);
 
   if (!_.isUndefined(myGameSystem)) {
-    var filterParams = { gamesystem: myGameSystem.name };
-    var games = videogameRepository.getVideoGames(filterParams);
+    const filterParams = { gamesystem: myGameSystem.name };
+    const games = videogameRepository.getVideoGames(filterParams);
 
     if (!_.isUndefined(games) && games.length > 0) {
       result = messageHelper.buildErrorMessage(GS_SVC_ERR_DELETE_VG_EXISTS_ASSOCIATED);
     } else {
-      var resultDeletion = gamesystemRepository.deleteGameSystem(id);
+      const resultDeletion = gamesystemRepository.deleteGameSystem(id);
       if (resultDeletion) {
         result = true;
       } else {
@@ -104,5 +97,5 @@ module.exports = {
   GS_SVC_ERR_UPDATE_GS_ALREADY_EXISTS_WITH_SAME_NAME,
   GS_SVC_ERR_UPDATE_GS_NOT_FOUND_BY_ID,
   GS_SVC_ERR_DELETE_GS_NOT_FOUND_BY_ID,
-  GS_SVC_ERR_DELETE_VG_EXISTS_ASSOCIATED
-}
+  GS_SVC_ERR_DELETE_VG_EXISTS_ASSOCIATED,
+};
